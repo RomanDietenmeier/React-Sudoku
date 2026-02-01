@@ -380,11 +380,41 @@ function getMissing9InLine(line: Array<number>, cells: Array<number>) {
         missingNumber = Number(key);
       }
     }
-    console.log("sum", sum, "missingNumber", missingNumber, "line", line);
     for (const index of line) {
       const value = cells[index];
       if (value === -1) {
         return [index, missingNumber];
+      }
+    }
+  }
+  return null;
+}
+
+function checkExclusion(line: Array<number>, cells: Array<number>) {
+  const numberCount: Record<number, number> = {
+    [-1]: 0,
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+  };
+
+  let count = 0;
+  for (const index of line) {
+    const value = cells[index];
+    numberCount[value] += 1;
+    count += 1;
+  }
+  if (count == 20) {
+    for (const [key, value] of Object.entries(numberCount)) {
+      if (value === 0) {
+        return Number(key);
       }
     }
   }
@@ -396,6 +426,13 @@ export function humanSolveMove(cells: Array<number>) {
     const possibleMove = getMissing9InLine(line, cells);
     if (possibleMove) {
       return possibleMove;
+    }
+  }
+
+  for (let index = 0; index < 81; index++) {
+    const possibleValue = checkExclusion(exclusions[index], cells);
+    if (possibleValue) {
+      return [index, possibleValue];
     }
   }
   return null;
