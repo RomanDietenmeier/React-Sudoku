@@ -9,6 +9,25 @@
   cursor: pointer;
 }
 
+.table_cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.table_cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  /* z-index: 0; */
+}
+
 .table_cell_border_top {
   border-top: 2px solid #669;
 }
@@ -25,15 +44,10 @@
   border-bottom: 2px solid #669;
 }
 
-.table_cell::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border: 2px solid transparent;
-  transition: border-color 0.3s ease;
-}
-
 .table_cell_active::after {
   border-color: #696;
+}
+
+.table_cell_error {
+  background-color: rgba(255, 0, 0, 0.15);
 }
