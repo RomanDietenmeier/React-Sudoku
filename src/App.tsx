@@ -11,6 +11,7 @@ export function App() {
     if (activeCell === -1) return;
 
     const newCells = cells.slice();
+    // console.log("e.key", e.key);
 
     if (e.key >= "1" && e.key <= "9") {
       newCells[activeCell] = Number(e.key);
@@ -18,6 +19,22 @@ export function App() {
     } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
       newCells[activeCell] = -1;
       setCells(newCells);
+    } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+      if ((activeCell + 1) % 9 !== 0) {
+        setActiveCell(activeCell + 1);
+      }
+    } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+      if (activeCell % 9 !== 0) {
+        setActiveCell(activeCell - 1);
+      }
+    } else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
+      if (activeCell - 9 >= 0) {
+        setActiveCell(activeCell - 9);
+      }
+    } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
+      if (activeCell + 9 < 81) {
+        setActiveCell(activeCell + 9);
+      }
     }
   }
 
