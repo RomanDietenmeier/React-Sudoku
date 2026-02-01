@@ -25,7 +25,7 @@ function checkCheck(check: Record<number, number>) {
   return false;
 }
 
-export function checkWrongMove(cells: number[]) {
+export function checkWrongMove(cells: Array<number>) {
   let wrongMoveCells: Array<number> = [];
   for (let i = 0; i < 80; i += 9) {
     const list = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8];
