@@ -26,20 +26,41 @@ function checkCheck(check: Record<number, number>) {
 }
 
 export function checkWrongMove(cells: number[]) {
+  let wrongMoveCells: Array<number> = [];
   for (let i = 0; i < 80; i += 9) {
-    let check = getEmptyCheck();
     const list = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8];
+    let check = getEmptyCheck();
     for (const index of list) {
       const value = cells[index];
       check[value] += 1;
     }
     const checkCheckValue = checkCheck(check);
-
     if (checkCheckValue) {
-      console.log("checkWrongMove", list);
-
-      return list;
+      wrongMoveCells.push(...list);
     }
   }
-  return [];
+
+  for (let i = 0; i < 9; i++) {
+    const list = [
+      i,
+      i + 9,
+      i + 18,
+      i + 27,
+      i + 36,
+      i + 45,
+      i + 54,
+      i + 63,
+      i + 72,
+    ];
+    let check = getEmptyCheck();
+    for (const index of list) {
+      const value = cells[index];
+      check[value] += 1;
+    }
+    const checkCheckValue = checkCheck(check);
+    if (checkCheckValue) {
+      wrongMoveCells.push(...list);
+    }
+  }
+  return [...new Set(wrongMoveCells)];
 }
