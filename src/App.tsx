@@ -8,10 +8,13 @@ export function App() {
   function handleKeyDown(e: KeyboardEvent) {
     if (activeCell === -1) return;
 
+    const newCells = cells.slice();
+
     if (e.key >= "1" && e.key <= "9") {
-      console.log("Number typed:", e.key);
-      const newCells = cells.slice();
       newCells[activeCell] = Number(e.key);
+      setCells(newCells);
+    } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
+      newCells[activeCell] = -1;
       setCells(newCells);
     }
   }
@@ -35,7 +38,7 @@ export function App() {
             className={`table_cell table_cell_border_top table_cell_border_left ${activeCell === 0 ? "table_cell_active" : ""}`}
             onClick={() => setActiveCell(0)}
           >
-            {cells[0]}
+            {cells[0] === -1 ? "" : cells[0]}
           </td>
           <td
             className={`table_cell table_cell_border_top ${activeCell === 1 ? "table_cell_active" : ""}`}
