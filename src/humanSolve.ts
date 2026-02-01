@@ -36,7 +36,7 @@ const linesChunks = [
   [60, 61, 62, 69, 70, 71, 78, 79, 80],
 ];
 
-export const exclusions: Record<number, Array<number>> = {
+export const exclusions: Record<number, Array<number>> = ToDo this is bugged and has to be split in 3 arrays per index: chunk row and column!{
   0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 27, 36, 45, 54, 63, 72],
   1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 28, 37, 46, 55, 64, 73],
   2: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 29, 38, 47, 56, 65, 74],
@@ -348,9 +348,7 @@ export const exclusions: Record<number, Array<number>> = {
   ],
 };
 
-const linesAll = [...linesHorizontal, ...linesVertical, ...linesChunks];
-
-function getMissing9InLine(line: Array<number>, cells: Array<number>) {
+function checkExclusion(line: Array<number>, cells: Array<number>) {
   const numberCount: Record<number, number> = {
     [-1]: 0,
     0: 0,
@@ -370,49 +368,14 @@ function getMissing9InLine(line: Array<number>, cells: Array<number>) {
     numberCount[value] += 1;
   }
   delete numberCount[-1];
+  const count = Object.values(numberCount).reduce((a, b) => a + b, 0);
 
-  const sum = Object.values(numberCount).reduce((a, b) => a + b, 0);
+  //   console.log("count", count);
 
-  if (sum === 8) {
-    let missingNumber: number = -1;
-    for (const [key, value] of Object.entries(numberCount)) {
-      if (value === 0) {
-        missingNumber = Number(key);
-      }
-    }
-    for (const index of line) {
-      const value = cells[index];
-      if (value === -1) {
-        return [index, missingNumber];
-      }
-    }
-  }
-  return null;
-}
-
-function checkExclusion(line: Array<number>, cells: Array<number>) {
-  const numberCount: Record<number, number> = {
-    [-1]: 0,
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-  };
-
-  let count = 0;
-  for (const index of line) {
-    const value = cells[index];
-    numberCount[value] += 1;
-    count += 1;
-  }
   if (count == 20) {
     for (const [key, value] of Object.entries(numberCount)) {
+      console.log("key", key, "value", value);
+
       if (value === 0) {
         return Number(key);
       }
@@ -422,13 +385,6 @@ function checkExclusion(line: Array<number>, cells: Array<number>) {
 }
 
 export function humanSolveMove(cells: Array<number>) {
-  for (const line of linesAll) {
-    const possibleMove = getMissing9InLine(line, cells);
-    if (possibleMove) {
-      return possibleMove;
-    }
-  }
-
   for (let index = 0; index < 81; index++) {
     const possibleValue = checkExclusion(exclusions[index], cells);
     if (possibleValue) {
