@@ -347,4 +347,56 @@ export const exclusions: Record<number, Array<number>> = {
     44, 53,
   ],
 };
-export function humanSolveMove(cells: Array<number>) {}
+
+const linesAll = [...linesHorizontal, ...linesVertical, ...linesChunks];
+
+function getMissing9InLine(line: Array<number>, cells: Array<number>) {
+  const numberCount: Record<number, number> = {
+    [-1]: 0,
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+  };
+
+  for (const index of line) {
+    const value = cells[index];
+    numberCount[value] += 1;
+  }
+  delete numberCount[-1];
+
+  const sum = Object.values(numberCount).reduce((a, b) => a + b, 0);
+
+  if (sum === 8) {
+    let missingNumber: number = -1;
+    for (const [key, value] of Object.entries(numberCount)) {
+      if (value === 0) {
+        missingNumber = Number(key);
+      }
+    }
+    console.log("sum", sum, "missingNumber", missingNumber, "line", line);
+    for (const index of line) {
+      const value = cells[index];
+      if (value === -1) {
+        return [index, missingNumber];
+      }
+    }
+  }
+  return null;
+}
+
+export function humanSolveMove(cells: Array<number>) {
+  for (const line of linesAll) {
+    const possibleMove = getMissing9InLine(line, cells);
+    if (possibleMove) {
+      return possibleMove;
+    }
+  }
+  return null;
+}
