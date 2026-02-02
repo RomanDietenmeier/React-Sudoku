@@ -53,3 +53,7 @@
 .table_cell_error {
   background-color: rgba(255, 0, 0, 0.15);
 }
+
+.font_monospace {
+  font-family: monospace;
+}
