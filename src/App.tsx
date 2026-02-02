@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
 import "./app.css";
 import { checkWrongMove } from "./checkWrongMove";
+import { humanSolveMove } from "./humanSolve";
 
 export function App() {
   const [wrongMove, setWrongMove] = useState<Array<number>>([]);
   const [activeCell, setActiveCell] = useState(-1);
-  const [cells, setCells] = useState<Array<number>>(Array(81).fill(-1));
+  const [cells, setCells] = useState<Array<number>>([
+    4, 2, -1, 3, -1, -1, -1, -1, -1, 6, -1, -1, 8, -1, 1, -1, -1, 9, 5, -1, 8,
+    4, -1, 7, -1, 6, -1,
+
+    1, -1, 7, 9, -1, -1, -1, 5, -1, -1, -1, 2, -1, 7, -1, 1, -1, -1, -1, 6, -1,
+    -1, -1, 8, 7, -1, 2,
+
+    -1, 4, -1, 7, -1, 9, 6, -1, 1, 2, -1, -1, 1, -1, 4, -1, -1, 5, -1, -1, -1,
+    -1, -1, 5, -1, 3, 8,
+  ]); //Array(81).fill(-1));
 
   function handleKeyDown(e: KeyboardEvent) {
     if (activeCell === -1) return;
@@ -40,12 +50,28 @@ export function App() {
 
   useEffect(() => {
     setWrongMove(checkWrongMove(cells));
+    console.log(
+      "ToDo DELETE THIS LINE",
+      "humanSolveMove",
+      humanSolveMove(cells),
+    );
   }, [cells]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeCell]);
+
+  function onClickSolveStep() {
+    const solveStep = humanSolveMove(cells);
+    if (!solveStep) {
+      window.alert("can't find a move");
+      return;
+    }
+    const newCells = cells.slice();
+    newCells[solveStep[0]] = solveStep[1];
+    setCells(newCells);
+  }
 
   return (
     <>
@@ -571,6 +597,7 @@ export function App() {
           </tr>
         </tbody>
       </table>
+      <button onClick={onClickSolveStep}>Solve Step</button>
     </>
   );
 }
