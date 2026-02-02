@@ -1,75 +1,56 @@
-# React + TypeScript + Vite
+# React Sudoku
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Sudoku React Showcase](Sudoku_react.jpg)
 
-Currently, two official plugins are available:
+## How to Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- install nodejs
+- npm install
+- npm run dev
 
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+<div>
+  <h2>ToDo / Further Steps</h2>
+  <p>
+    The "Solve Step" solver is not able to solve Sudokus with the 2
+    candidates problem or harder.
+  </p>
+  <p>
+    I guess I could add a brute-force solver, but that is not what I like.
+  </p>
+  <p>This is such a Sudoku:</p>
+  <p className="font_monospace">
+    <div>[</div>
+    <div>-1, -1, -1, &nbsp;6, -1, &nbsp;4, -1, -1, -1, </div>
+    <div>-1, -1, -1, -1, &nbsp;8, -1, -1, -1, &nbsp;6, </div>
+    <div>-1, -1, &nbsp;6, &nbsp;9, -1, -1, -1, &nbsp;3, &nbsp;8,</div>
+    <div>&nbsp;2, -1, -1, -1, -1, &nbsp;6, &nbsp;5, -1, -1,</div>
+    <div>&nbsp;5, &nbsp;7, -1, -1, -1, -1, -1, &nbsp;6, &nbsp;1,</div>
+    <div>-1, -1, &nbsp;3, &nbsp;1, -1, -1, -1, -1, &nbsp;4,</div>
+    <div>&nbsp;9, &nbsp;6, -1, -1, -1, &nbsp;7, &nbsp;2, -1, -1,</div>
+    <div>&nbsp;7, -1, -1, -1, &nbsp;1, -1, -1, -1, -1, </div>
+    <div>-1, -1, -1, &nbsp;8, -1, &nbsp;9, -1, -1, -1, </div>
+    <div>]</div>
+  </p>
+  <p>
+    Nonetheless, this is a working Sudoku-Board! With an active cell and
+    error highlighting.
+  </p>
+  <p>ENJOY</p>
+  <p>P.S. I guess I should also add a Sudoku Creator ^^</p>
+  <p>
+    I think I should read the book from Lukas Richard on Sudoku
+    Strategies:{" "}
+    <div style="text-align: center;">
+      <a href="https://lr-raetsel.de/sudoku-strategien-buch/">
+        Sudoku Strategien Buch - Lukas Richard
+      </a>
+    </div>
+    <br />
+    He also has an excelent Website on the Strategies:
+    <div style="text-align: center;">
+      <a href="https://sudoku-hilfe.de/direkter_zweifacher_kandidat">
+        sudoku-hilfe.de/direkter_zweifacher_kandidat
+      </a>
+    </div>
+  </p>
+</div>
