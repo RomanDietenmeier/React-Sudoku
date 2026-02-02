@@ -384,6 +384,63 @@ function checkExclusion(line: Array<number>, cells: Array<number>) {
   return null;
 }
 
+function printField(cells: Array<number>) {
+  let txt = "\n";
+  for (let i = 1; i < 82; i++) {
+    txt += String(cells[i - 1]).padStart(3, " ");
+    if (i % 3 == 0) {
+      txt += " ";
+    }
+    if (i % 9 == 0) {
+      txt += "\n";
+    }
+  }
+  return txt;
+}
+
+function checkMasks(cells: Array<number>) {
+  for (let i = 1; i < 10; i++) {
+    const tmpCells = cells.slice();
+    for (let index = 0; index < 81; index++) {
+      if (tmpCells[index] !== i) {
+        continue;
+      }
+      const lineHorizontal = linesHorizontal.find((x) => x.includes(index));
+      const lineVertical = linesVertical.find((x) => x.includes(index));
+      const lineChunk = linesChunks.find((x) => x.includes(index));
+
+      for (const line of [lineHorizontal, lineVertical, lineChunk]) {
+        if (!line) {
+          continue;
+        }
+        for (const lineIndex of line) {
+          if (tmpCells[lineIndex] === -2 || tmpCells[lineIndex] >= 0) {
+            continue;
+          }
+          tmpCells[lineIndex] = -2;
+        }
+      }
+    }
+
+    // console.log("i", i, "tmpCells", printField(tmpCells));
+
+    for (const line of [...linesHorizontal, ...linesVertical, ...linesChunks]) {
+      let emptyCellCount = 0;
+      let emptyCellIndex = -1;
+      for (const lineIndex of line) {
+        if (tmpCells[lineIndex] === -1) {
+          emptyCellCount++;
+          emptyCellIndex = lineIndex;
+        }
+      }
+      if (emptyCellCount === 1) {
+        return [emptyCellIndex, i];
+      }
+    }
+  }
+  return null;
+}
+
 export function humanSolveMove(cells: Array<number>) {
   for (let index = 0; index < 81; index++) {
     if (cells[index] !== -1) {
@@ -393,6 +450,11 @@ export function humanSolveMove(cells: Array<number>) {
     if (possibleValue) {
       return [index, possibleValue];
     }
+  }
+
+  const possibleMove = checkMasks(cells);
+  if (possibleMove) {
+    return possibleMove;
   }
   return null;
 }
