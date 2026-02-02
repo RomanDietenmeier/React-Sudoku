@@ -36,7 +36,7 @@ const linesChunks = [
   [60, 61, 62, 69, 70, 71, 78, 79, 80],
 ];
 
-export const exclusions: Record<number, Array<number>> = ToDo this is bugged and has to be split in 3 arrays per index: chunk row and column!{
+export const exclusions: Record<number, Array<number>> = {
   0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 27, 36, 45, 54, 63, 72],
   1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 28, 37, 46, 55, 64, 73],
   2: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 29, 38, 47, 56, 65, 74],
@@ -351,7 +351,6 @@ export const exclusions: Record<number, Array<number>> = ToDo this is bugged and
 function checkExclusion(line: Array<number>, cells: Array<number>) {
   const numberCount: Record<number, number> = {
     [-1]: 0,
-    0: 0,
     1: 0,
     2: 0,
     3: 0,
@@ -368,24 +367,28 @@ function checkExclusion(line: Array<number>, cells: Array<number>) {
     numberCount[value] += 1;
   }
   delete numberCount[-1];
-  const count = Object.values(numberCount).reduce((a, b) => a + b, 0);
 
-  //   console.log("count", count);
-
-  if (count == 20) {
-    for (const [key, value] of Object.entries(numberCount)) {
-      console.log("key", key, "value", value);
-
-      if (value === 0) {
-        return Number(key);
-      }
+  for (const [key, value] of Object.entries(numberCount) as any as [
+    number,
+    number,
+  ][]) {
+    if (value >= 1) {
+      delete numberCount[key];
     }
   }
+
+  if (Object.keys(numberCount).length === 1) {
+    return Object.keys(numberCount)[0];
+  }
+
   return null;
 }
 
 export function humanSolveMove(cells: Array<number>) {
   for (let index = 0; index < 81; index++) {
+    if (cells[index] !== -1) {
+      continue;
+    }
     const possibleValue = checkExclusion(exclusions[index], cells);
     if (possibleValue) {
       return [index, possibleValue];
