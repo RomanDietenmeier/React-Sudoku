@@ -378,7 +378,7 @@ function checkExclusion(line: Array<number>, cells: Array<number>) {
   }
 
   if (Object.keys(numberCount).length === 1) {
-    return Object.keys(numberCount)[0];
+    return Number(Object.keys(numberCount)[0]);
   }
 
   return null;
