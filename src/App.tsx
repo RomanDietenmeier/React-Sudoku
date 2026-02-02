@@ -630,18 +630,18 @@ export function App() {
         <p>
           I think I should read the book from Lukas Richard on Sudoku
           Strategies:{" "}
-          <center>
+          <div style={{ textAlign: "center" }}>
             <a href="https://lr-raetsel.de/sudoku-strategien-buch/">
               Sudoku Strategien Buch - Lukas Richard
             </a>
-          </center>
+          </div>
           <br />
           He also has an excelent Website on the Strategies:
-          <center>
+          <div style={{ textAlign: "center" }}>
             <a href="https://sudoku-hilfe.de/direkter_zweifacher_kandidat">
               sudoku-hilfe.de/direkter_zweifacher_kandidat
             </a>
-          </center>
+          </div>
         </p>
       </div>
     </>
