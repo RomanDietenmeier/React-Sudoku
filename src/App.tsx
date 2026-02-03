@@ -24,15 +24,12 @@ export function App() {
     if (activeCell === -1) return;
     e.preventDefault();
 
-    const newCells = cells.slice();
-    console.log("e.key", e.key, "e.ctrlKey", e.ctrlKey, "e.metaKey", e.metaKey);
+    // console.log("e.key", e.key, "e.ctrlKey", e.ctrlKey, "e.metaKey", e.metaKey);
 
     if (e.key >= "1" && e.key <= "9") {
-      newCells[activeCell] = Number(e.key);
-      setCellsHistory([...cellsHistory, newCells]);
+      onClickNumber(Number(e.key));
     } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
-      newCells[activeCell] = -1;
-      setCellsHistory([...cellsHistory, newCells]);
+      onClickDelete();
     } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
       if ((activeCell + 1) % 9 !== 0) {
         setActiveCell(activeCell + 1);
@@ -49,6 +46,8 @@ export function App() {
       if (activeCell + 9 < 81) {
         setActiveCell(activeCell + 9);
       }
+    } else if ((e.key === "z" || e.key === "Z") && e.ctrlKey) {
+      onClickRevert();
     }
   }
 
@@ -64,7 +63,7 @@ export function App() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeCell]);
+  }, [activeCell, cells]);
 
   function onClickSolveStep() {
     const solveStep = humanSolveMove(cells);
