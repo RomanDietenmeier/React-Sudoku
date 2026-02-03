@@ -717,7 +717,7 @@ export function App() {
           I guess I could add a brute-force solver, but that is not what I like.
         </p>
         <p>This is such a Sudoku:</p>
-        <p className="font_monospace">
+        <div className="font_monospace">
           <div>[</div>
           <div>-1, -1, -1, &nbsp;6, -1, &nbsp;4, -1, -1, -1, </div>
           <div>-1, -1, -1, -1, &nbsp;8, -1, -1, -1, &nbsp;6, </div>
@@ -729,7 +729,7 @@ export function App() {
           <div>&nbsp;7, -1, -1, -1, &nbsp;1, -1, -1, -1, -1, </div>
           <div>-1, -1, -1, &nbsp;8, -1, &nbsp;9, -1, -1, -1, </div>
           <div>]</div>
-        </p>
+        </div>
         <p>
           Nonetheless, this is a working Sudoku-Board! With an active cell and
           error highlighting.
