@@ -63,21 +63,21 @@ export function App() {
     if (isWrongMove.length > 0) {
       return;
     }
-    const [cellsSolved, solveFirstMove, hasMultipleResults, solvable] =
-      bruteForceSolve(cells);
-    console.log(
-      "ToDo DELETE THIS LINE",
-      "humanSolveMove",
-      humanSolveMove(cells),
-      "bruteForceSolve",
-      printField(cellsSolved),
-      "hasMultipleResults",
-      hasMultipleResults,
-      "solveFirstMove",
-      solveFirstMove,
-      "solvable",
-      solvable,
-    );
+    // const [cellsSolved, solveFirstMove, hasMultipleResults, solvable] =
+    //   bruteForceSolve(cells);
+    // console.log(
+    //   "ToDo DELETE THIS LINE",
+    //   "humanSolveMove",
+    //   humanSolveMove(cells),
+    //   "bruteForceSolve",
+    //   printField(cellsSolved),
+    //   "hasMultipleResults",
+    //   hasMultipleResults,
+    //   "solveFirstMove",
+    //   solveFirstMove,
+    //   "solvable",
+    //   solvable,
+    // );
   }, [cells]);
 
   useEffect(() => {
@@ -85,28 +85,21 @@ export function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeCell, cells]);
 
-  function onClickSolveStep() {
+  function onClickHint() {
     const solveStep = humanSolveMove(cells);
     if (!solveStep) {
-      window.alert("can't find a move");
+      window.alert(
+        "This hint function only detects easy steps or ToDo errors.",
+      );
       return;
     }
-    const newCells = cells.slice();
-    newCells[solveStep[0]] = solveStep[1];
-    setCellsHistory([...cellsHistory, newCells]);
+    setActiveCell(solveStep[0]);
   }
 
   function onClickDelete() {
     if (activeCell === -1) return;
     const newCells = cells.slice();
     newCells[activeCell] = -1;
-    setCellsHistory([...cellsHistory, newCells]);
-  }
-
-  function onClickNumber(number: number) {
-    if (activeCell === -1) return;
-    const newCells = cells.slice();
-    newCells[activeCell] = number;
     setCellsHistory([...cellsHistory, newCells]);
   }
 
@@ -117,6 +110,13 @@ export function App() {
     const oldCellsHistory = cellsHistory.slice();
     oldCellsHistory.pop();
     setCellsHistory(oldCellsHistory);
+  }
+
+  function onClickNumber(number: number) {
+    if (activeCell === -1) return;
+    const newCells = cells.slice();
+    newCells[activeCell] = number;
+    setCellsHistory([...cellsHistory, newCells]);
   }
 
   return (
@@ -653,7 +653,9 @@ export function App() {
             paddingTop: "10px",
           }}
         >
-          <button className="grid_normal_button">Tipp</button>
+          <button className="grid_normal_button" onClick={onClickHint}>
+            Tipp
+          </button>
           <button className="grid_normal_button" onClick={onClickDelete}>
             Löschen
           </button>
@@ -725,7 +727,6 @@ export function App() {
           </button>
         </div>
       </div>
-      <button onClick={onClickSolveStep}>Solve Step</button>
       <div>
         <h2>ToDo / Further Steps</h2>
         <p>
