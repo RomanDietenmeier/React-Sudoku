@@ -391,4 +391,4 @@ function s(t, s, i) {
   i(E, "Notify");
   var m = E;
   globalThis.Notify = m;
-})(); //# sourceMappingURL=simple-notify.min.js.map
+})();

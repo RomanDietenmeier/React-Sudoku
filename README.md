@@ -4,7 +4,7 @@
 
 ## How to Run
 
-- install nodejs
+- install nodejs v24.12.0
 - npm install
 - npm run dev
 
