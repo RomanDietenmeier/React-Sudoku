@@ -459,10 +459,6 @@ export function humanSolveMove(cells: Array<number>) {
   return null;
 }
 
-function cellToMinimalString(cells: Array<number>) {
-  return cells.join("");
-}
-
 export function bruteForceSolve(
   pCells: Array<number>,
 ): [Array<number>, boolean] {
