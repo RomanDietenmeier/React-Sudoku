@@ -95,7 +95,7 @@ export function App() {
     if (!solveStep) {
       new window.Notify({
         title: "Kein Tipp verfügbar",
-        text: "<p>Dieses Sudoku ist zu schwer für die Tippfunktion. <br/>Die Tippfunktion versichert dir aber, dass das Sudoku fehlerfrei ist!</p>Viel Glück 🍀",
+        text: `<p style="text-align:center;">Dieses Sudoku ist zu schwer für die Tippfunktion. <br/>Die Tippfunktion versichert dir aber, dass das Sudoku fehlerfrei ist!</p><div style="text-align:center;">Viel Glück 🍀</div>`,
         status: "info",
         position: "center",
         showIcon: false,

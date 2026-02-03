@@ -106,16 +106,21 @@
   color: var(--sn-notify-close-icon-color);
 }
 .sn-notify-title {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
+  text-align: center;
+  width: 100%;
   padding-right: calc(
     var(--sn-notify-padding) + var(--sn-notify-close-icon-size)
   );
   color: var(--sn-notify-title-color);
 }
 .sn-notify-text {
-  font-size: 0.875rem;
+  font-size: 1.05rem;
   margin-top: 0.25rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
   color: var(--sn-notify-text-color);
 }
 .sn-notify-outline {
