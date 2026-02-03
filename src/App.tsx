@@ -147,7 +147,8 @@ export function App() {
         style={{
           borderCollapse: "collapse",
           aspectRatio: "1 / 1",
-          width: "100%",
+          width: "calc(100vw - 1rem)",
+          height: "calc(100vw - 1rem)",
         }}
       >
         <tbody>
