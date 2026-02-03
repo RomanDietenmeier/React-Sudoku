@@ -93,9 +93,14 @@ export function App() {
 
     const solveStep = humanSolveMove(cells);
     if (!solveStep) {
-      window.alert(
-        "This hint function only detects easy steps or ToDo errors.",
-      );
+      new window.Notify({
+        title: "Kein Tipp verfügbar",
+        text: "<p>Dieses Sudoku ist zu schwer für die Tippfunktion. <br/>Die Tippfunktion versichert dir aber, dass das Sudoku fehlerfrei ist!</p>Viel Glück 🍀",
+        status: "info",
+        position: "center",
+        showIcon: false,
+      });
+
       return;
     }
     console.log(
