@@ -22,9 +22,10 @@ export function App() {
 
   function handleKeyDown(e: KeyboardEvent) {
     if (activeCell === -1) return;
+    e.preventDefault();
 
     const newCells = cells.slice();
-    // console.log("e.key", e.key);
+    console.log("e.key", e.key, "e.ctrlKey", e.ctrlKey, "e.metaKey", e.metaKey);
 
     if (e.key >= "1" && e.key <= "9") {
       newCells[activeCell] = Number(e.key);
@@ -737,19 +738,32 @@ export function App() {
         <p>P.S. I guess I should also add a Sudoku Creator ^^</p>
         <p>
           I think I should read the book from Lukas Richard on Sudoku
-          Strategies:{" "}
-          <div style={{ textAlign: "center" }}>
+          Strategies: <br />
+          <span
+            style={{
+              display: "inline-block",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
             <a href="https://lr-raetsel.de/sudoku-strategien-buch/">
               Sudoku Strategien Buch - Lukas Richard
             </a>
-          </div>
+          </span>
           <br />
           He also has an excelent Website on the Strategies:
-          <div style={{ textAlign: "center" }}>
+          <br />
+          <span
+            style={{
+              display: "inline-block",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
             <a href="https://sudoku-hilfe.de/direkter_zweifacher_kandidat">
-              sudoku-hilfe.de/direkter_zweifacher_kandidat
+              Sudoku-Hilfe.de/direkter_zweifacher_kandidat
             </a>
-          </div>
+          </span>
         </p>
       </div>
     </>
