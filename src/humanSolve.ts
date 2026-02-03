@@ -384,7 +384,7 @@ function checkExclusion(line: Array<number>, cells: Array<number>) {
   return null;
 }
 
-function printField(cells: Array<number>) {
+export function printField(cells: Array<number>) {
   let txt = "\n";
   for (let i = 1; i < 82; i++) {
     txt += String(cells[i - 1]).padStart(3, " ");
@@ -457,4 +457,60 @@ export function humanSolveMove(cells: Array<number>) {
     return possibleMove;
   }
   return null;
+}
+
+function cellToMinimalString(cells: Array<number>) {
+  return cells.join("");
+}
+
+export function bruteForceSolve(
+  pCells: Array<number>,
+): [Array<number>, boolean] {
+  const cells = pCells.slice();
+  const solves: Array<Array<number>> = [];
+
+  function nubmerIsPossible(index: number, number: number) {
+    const lineHorizontal = linesHorizontal.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+    const lineVertical = linesVertical.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+    const lineChunk = linesChunks.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+
+    for (const line of [lineHorizontal, lineVertical, lineChunk]) {
+      for (const lineIndex of line) {
+        if (cells[lineIndex] === number) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function solve() {
+    if (solves.length > 1) {
+      return;
+    }
+    for (let index = 0; index < 81; index++) {
+      if (cells[index] !== -1) {
+        continue;
+      }
+      for (let number = 1; number < 10; number++) {
+        if (nubmerIsPossible(index, number)) {
+          cells[index] = number;
+          solve();
+          cells[index] = -1;
+        }
+      }
+
+      return;
+    }
+    solves.push(cells.slice());
+  }
+  solve();
+
+  return [solves[0], solves.length > 1 ? true : false];
 }

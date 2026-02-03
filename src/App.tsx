@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./app.css";
 import { checkWrongMove } from "./checkWrongMove";
-import { humanSolveMove } from "./humanSolve";
+import { bruteForceSolve, humanSolveMove, printField } from "./humanSolve";
 
 export function App() {
   const [wrongMove, setWrongMove] = useState<Array<number>>([]);
@@ -53,10 +53,15 @@ export function App() {
 
   useEffect(() => {
     setWrongMove(checkWrongMove(cells));
+    const [cellsSolved, hasMultipleResults] = bruteForceSolve(cells);
     console.log(
       "ToDo DELETE THIS LINE",
       "humanSolveMove",
       humanSolveMove(cells),
+      "bruteForceSolve",
+      printField(cellsSolved),
+      "hasMultipleResults",
+      hasMultipleResults,
     );
   }, [cells]);
 
