@@ -6,6 +6,7 @@ import { bruteForceSolve, humanSolveMove, printField } from "./humanSolve";
 export function App() {
   const [wrongMove, setWrongMove] = useState<Array<number>>([]);
   const [activeCell, setActiveCell] = useState(-1);
+  const [hintNotSolvable, setHintNotSolvable] = useState(false);
   const [cellsHistory, setCellsHistory] = useState<Array<Array<number>>>([
     [
       -1, -1, -1, 6, -1, 4, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, 6, -1,
@@ -58,26 +59,17 @@ export function App() {
   }
 
   useEffect(() => {
+    const bruteForceSolveResult = bruteForceSolve(cells);
+
+    const solvable = bruteForceSolveResult[3];
+    if (solvable) {
+      setHintNotSolvable(false);
+    }
     const isWrongMove = checkWrongMove(cells);
     setWrongMove(isWrongMove);
     if (isWrongMove.length > 0) {
       return;
     }
-    // const [cellsSolved, solveFirstMove, hasMultipleResults, solvable] =
-    //   bruteForceSolve(cells);
-    // console.log(
-    //   "ToDo DELETE THIS LINE",
-    //   "humanSolveMove",
-    //   humanSolveMove(cells),
-    //   "bruteForceSolve",
-    //   printField(cellsSolved),
-    //   "hasMultipleResults",
-    //   hasMultipleResults,
-    //   "solveFirstMove",
-    //   solveFirstMove,
-    //   "solvable",
-    //   solvable,
-    // );
   }, [cells]);
 
   useEffect(() => {
@@ -86,6 +78,19 @@ export function App() {
   }, [activeCell, cells]);
 
   function onClickHint() {
+    if (wrongMove.length > 0) {
+      setHintNotSolvable(true);
+      return;
+    }
+    const bruteForceSolveResult = bruteForceSolve(cells);
+    const cellsSolved = bruteForceSolveResult[0];
+    const solvable = bruteForceSolveResult[3];
+
+    if (!solvable) {
+      setHintNotSolvable(true);
+      return;
+    }
+
     const solveStep = humanSolveMove(cells);
     if (!solveStep) {
       window.alert(
@@ -93,6 +98,18 @@ export function App() {
       );
       return;
     }
+    console.log(
+      "solveStep",
+      solveStep,
+      "cellsSolved",
+      printField(cellsSolved),
+      "solvable",
+      solvable,
+      "bruteForceSolveResult[1] solveFirstMove",
+      bruteForceSolveResult[1],
+      "bruteForceSolveResult[2] hasMultipleResults",
+      bruteForceSolveResult[2],
+    );
     setActiveCell(solveStep[0]);
   }
 
@@ -659,7 +676,10 @@ export function App() {
           <button className="grid_normal_button" onClick={onClickDelete}>
             Löschen
           </button>
-          <button className="grid_normal_button" onClick={onClickRevert}>
+          <button
+            className={`grid_normal_button ${hintNotSolvable ? "grid_normal_button_active" : ""}`}
+            onClick={onClickRevert}
+          >
             Rückgängig
           </button>
         </div>

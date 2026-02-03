@@ -61,6 +61,14 @@
 .grid_normal_button {
   aspect-ratio: 4 /1;
   width: 100%;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.grid_normal_button_active {
+  border-color: #696;
+  background-color: rgba(0, 255, 0, 0.15);
 }
 
 .grid_square_button {
