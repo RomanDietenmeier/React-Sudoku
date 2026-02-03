@@ -6,16 +6,19 @@ import { humanSolveMove } from "./humanSolve";
 export function App() {
   const [wrongMove, setWrongMove] = useState<Array<number>>([]);
   const [activeCell, setActiveCell] = useState(-1);
-  const [cells, setCells] = useState<Array<number>>([
-    -1, -1, -1, 6, -1, 4, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, 6, -1, -1,
-    6, 9, -1, -1, -1, 3, 8,
+  const [cellsHistory, setCellsHistory] = useState<Array<Array<number>>>([
+    [
+      -1, -1, -1, 6, -1, 4, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, 6, -1,
+      -1, 6, 9, -1, -1, -1, 3, 8,
 
-    2, -1, -1, -1, -1, 6, 5, -1, -1, 5, 7, -1, -1, -1, -1, -1, 6, 1, -1, -1, 3,
-    1, -1, -1, -1, -1, 4,
+      2, -1, -1, -1, -1, 6, 5, -1, -1, 5, 7, -1, -1, -1, -1, -1, 6, 1, -1, -1,
+      3, 1, -1, -1, -1, -1, 4,
 
-    9, 6, -1, -1, -1, 7, 2, -1, -1, 7, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1,
-    -1, 8, -1, 9, -1, -1, -1,
-  ]); //Array(81).fill(-1));
+      9, 6, -1, -1, -1, 7, 2, -1, -1, 7, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1,
+      -1, 8, -1, 9, -1, -1, -1,
+    ],
+  ]);
+  const cells = cellsHistory[cellsHistory.length - 1];
 
   function handleKeyDown(e: KeyboardEvent) {
     if (activeCell === -1) return;
@@ -25,10 +28,10 @@ export function App() {
 
     if (e.key >= "1" && e.key <= "9") {
       newCells[activeCell] = Number(e.key);
-      setCells(newCells);
+      setCellsHistory([...cellsHistory, newCells]);
     } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
       newCells[activeCell] = -1;
-      setCells(newCells);
+      setCellsHistory([...cellsHistory, newCells]);
     } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
       if ((activeCell + 1) % 9 !== 0) {
         setActiveCell(activeCell + 1);
@@ -70,21 +73,30 @@ export function App() {
     }
     const newCells = cells.slice();
     newCells[solveStep[0]] = solveStep[1];
-    setCells(newCells);
+    setCellsHistory([...cellsHistory, newCells]);
   }
 
   function onClickDelete() {
     if (activeCell === -1) return;
     const newCells = cells.slice();
     newCells[activeCell] = -1;
-    setCells(newCells);
+    setCellsHistory([...cellsHistory, newCells]);
   }
 
   function onClickNumber(number: number) {
     if (activeCell === -1) return;
     const newCells = cells.slice();
     newCells[activeCell] = number;
-    setCells(newCells);
+    setCellsHistory([...cellsHistory, newCells]);
+  }
+
+  function onClickRevert() {
+    if (cellsHistory.length <= 1) {
+      return;
+    }
+    const oldCellsHistory = cellsHistory.slice();
+    oldCellsHistory.pop();
+    setCellsHistory(oldCellsHistory);
   }
 
   return (
@@ -625,7 +637,9 @@ export function App() {
           <button className="grid_normal_button" onClick={onClickDelete}>
             Löschen
           </button>
-          <button className="grid_normal_button">Rückgängig</button>
+          <button className="grid_normal_button" onClick={onClickRevert}>
+            Rückgängig
+          </button>
         </div>
         <div
           style={{
