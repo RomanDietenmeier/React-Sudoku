@@ -57,3 +57,13 @@
 .font_monospace {
   font-family: monospace;
 }
+
+.grid_normal_button {
+  aspect-ratio: 4 /1;
+  width: 100%;
+}
+
+.grid_square_button {
+  aspect-ratio: 1 /1;
+  width: 100%;
+}

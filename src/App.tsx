@@ -73,6 +73,20 @@ export function App() {
     setCells(newCells);
   }
 
+  function onClickDelete() {
+    if (activeCell === -1) return;
+    const newCells = cells.slice();
+    newCells[activeCell] = -1;
+    setCells(newCells);
+  }
+
+  function onClickNumber(number: number) {
+    if (activeCell === -1) return;
+    const newCells = cells.slice();
+    newCells[activeCell] = number;
+    setCells(newCells);
+  }
+
   return (
     <>
       <table
@@ -597,6 +611,86 @@ export function App() {
           </tr>
         </tbody>
       </table>
+      <div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            columnGap: "10px",
+            padding: "5px",
+            paddingTop: "10px",
+          }}
+        >
+          <button className="grid_normal_button">Tipp</button>
+          <button className="grid_normal_button" onClick={onClickDelete}>
+            Löschen
+          </button>
+          <button className="grid_normal_button">Rückgängig</button>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+            columnGap: "10px",
+            padding: "5px",
+          }}
+        >
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(1)}
+          >
+            1
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(2)}
+          >
+            2
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(3)}
+          >
+            3
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(4)}
+          >
+            4
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(5)}
+          >
+            5
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(6)}
+          >
+            6
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(7)}
+          >
+            7
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(8)}
+          >
+            8
+          </button>
+          <button
+            className="grid_square_button"
+            onClick={() => onClickNumber(9)}
+          >
+            9
+          </button>
+        </div>
+      </div>
       <button onClick={onClickSolveStep}>Solve Step</button>
       <div>
         <h2>ToDo / Further Steps</h2>
