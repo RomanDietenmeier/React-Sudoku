@@ -52,8 +52,13 @@ export function App() {
   }
 
   useEffect(() => {
-    setWrongMove(checkWrongMove(cells));
-    const [cellsSolved, hasMultipleResults] = bruteForceSolve(cells);
+    const isWrongMove = checkWrongMove(cells);
+    setWrongMove(isWrongMove);
+    if (isWrongMove.length > 0) {
+      return;
+    }
+    const [cellsSolved, solveFirstMove, hasMultipleResults, solvable] =
+      bruteForceSolve(cells);
     console.log(
       "ToDo DELETE THIS LINE",
       "humanSolveMove",
@@ -62,6 +67,10 @@ export function App() {
       printField(cellsSolved),
       "hasMultipleResults",
       hasMultipleResults,
+      "solveFirstMove",
+      solveFirstMove,
+      "solvable",
+      solvable,
     );
   }, [cells]);
 

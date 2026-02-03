@@ -459,11 +459,29 @@ export function humanSolveMove(cells: Array<number>) {
   return null;
 }
 
+/**
+ * Tries to solve the given Sudoku board using brute-force backtracking.
+ *
+ * - Explores all valid number placements recursively
+ * - Detects whether the puzzle is solvable
+ * - Detects if multiple solutions exist
+ * - Returns the first valid solution and the first decision move
+ *
+ * @param pCells Sudoku board as a flat array of length 81 (-1 = empty cell)
+ * @returns [
+ *   solvedCells,        // solved board or original input if unsolvable
+ *   solveFirstMove,     // first guessed move [index, number]
+ *   hasMultipleResults, // true if more than one solution exists
+ *   solvable            // true if at least one solution exists
+ * ]
+ */
 export function bruteForceSolve(
   pCells: Array<number>,
-): [Array<number>, boolean] {
+): [Array<number>, Array<number>, boolean, boolean] {
   const cells = pCells.slice();
   const solves: Array<Array<number>> = [];
+  let firstMove: Array<number> = [];
+  const moves: Array<Array<number>> = [];
 
   function nubmerIsPossible(index: number, number: number) {
     const lineHorizontal = linesHorizontal.find((x) =>
@@ -497,16 +515,26 @@ export function bruteForceSolve(
       for (let number = 1; number < 10; number++) {
         if (nubmerIsPossible(index, number)) {
           cells[index] = number;
+          moves.push([index, number]);
           solve();
           cells[index] = -1;
+          moves.pop();
         }
       }
 
       return;
     }
+    if (firstMove.length <= 0) {
+      firstMove = moves[0];
+    }
     solves.push(cells.slice());
   }
   solve();
 
-  return [solves[0], solves.length > 1 ? true : false];
+  return [
+    solves.length <= 0 ? pCells : solves[0],
+    firstMove,
+    solves.length > 1 ? true : false,
+    solves.length <= 0 ? false : true,
+  ];
 }
