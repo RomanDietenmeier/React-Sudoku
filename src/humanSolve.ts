@@ -590,63 +590,66 @@ export function createSudoku(): Array<number> {
 
   cells[40] = center40;
 
-  for (let i = 0; i < noDups1to9.length; i++) {
-    if (errorCount > 3) {
-      // console.log("error Reset");
+  for (const number of noDups1to9) {
+    // if (errorCount > 0) {
+    //   // console.log("error Reset");
 
-      for (let j = 0; j < errorCount; j++) {
-        const randomIndex = Math.floor(Math.random() * setIndices.length);
-        const deleteIndex = setIndices[randomIndex];
-        let deletePairIndex = randomIndex - 1;
-        if (randomIndex % 2 === 0) {
-          deletePairIndex += 2;
-        }
-        deletePairIndex = setIndices[deletePairIndex];
-        console.log(
-          "error Reset",
-          String(cells[deleteIndex]),
-          String(cells[deletePairIndex]),
-        );
+    //   for (let j = 0; j < errorCount; j++) {
+    //     const randomIndex = Math.floor(Math.random() * setIndices.length);
+    //     const deleteIndex = setIndices[randomIndex];
+    //     let deletePairIndex = randomIndex - 1;
+    //     if (randomIndex % 2 === 0) {
+    //       deletePairIndex += 2;
+    //     }
+    //     deletePairIndex = setIndices[deletePairIndex];
+    //     console.log(
+    //       "error Reset",
+    //       String(cells[deleteIndex]),
+    //       String(cells[deletePairIndex]),
+    //     );
 
-        cells[deleteIndex] = -1;
-        cells[deletePairIndex] = -1;
-        setIndices = setIndices.filter(
-          (x) => x !== deleteIndex && x !== deletePairIndex,
-        );
-        console.log("setIndices", deleteIndex, deletePairIndex, setIndices);
-      }
-      i -= 2;
-      if (i < -1) {
-        i = -1;
-      }
-      errorCount = 0;
-      continue;
-    }
+    //     cells[deleteIndex] = -1;
+    //     cells[deletePairIndex] = -1;
+    //     setIndices = setIndices.filter(
+    //       (x) => x !== deleteIndex && x !== deletePairIndex,
+    //     );
+    //     console.log("setIndices", deleteIndex, deletePairIndex, setIndices);
+    //   }
+
+    //   errorCount--;
+    //   continue;
+    // }
 
     const orangeIndex =
       orangeCells[Math.floor(Math.random() * orangeCells.length)];
     const purpleIndex =
-      purpleCells[Math.floor(Math.random() * orangeCells.length)];
+      purpleCells[Math.floor(Math.random() * purpleCells.length)];
 
     if (cells[orangeIndex] !== -1 || cells[purpleIndex] !== -1) {
       errorCount++;
-      i--;
+      // noDups1to9.push(number);
       continue;
     }
-    const number = noDups1to9[i];
 
-    if (
-      !nubmerIsPossible(orangeIndex, number) ||
-      !nubmerIsPossible(purpleIndex, number)
-    ) {
-      errorCount++;
-      i--;
-      continue;
-    }
+    // if (
+    //   !nubmerIsPossible(orangeIndex, number) ||
+    //   !nubmerIsPossible(purpleIndex, number)
+    // ) {
+    //   errorCount++;
+    //   // noDups1to9.push(number);
+    //   continue;
+    // }
 
     cells[orangeIndex] = number;
+    // if (!nubmerIsPossible(purpleIndex, number)) {
+    //   cells[orangeIndex] = -1;
+    //   errorCount++;
+    //   // noDups1to9.push(number);
+    //   continue;
+    // }
     cells[purpleIndex] = number;
     setIndices.push(orangeIndex, purpleIndex);
+    errorCount = Math.max(0, errorCount - 1);
   }
 
   // const [_, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
