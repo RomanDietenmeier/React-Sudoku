@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import "./app.css";
 import { checkWrongMove } from "./checkWrongMove";
-import { bruteForceSolve, humanSolveMove, printField } from "./humanSolve";
+import {
+  bruteForceSolve,
+  getEasilySolvableSudoku,
+  humanSolveMove,
+  printField,
+} from "./humanSolve";
 
 export function App() {
   const [wrongMove, setWrongMove] = useState<Array<number>>([]);
   const [activeCell, setActiveCell] = useState(-1);
   const [hintNotSolvable, setHintNotSolvable] = useState(false);
   const [cellsHistory, setCellsHistory] = useState<Array<Array<number>>>([
-    [
-      -1, -1, 2, -1, 6, 8, 5, -1, -1, 3, -1, -1, 2, -1, 5, -1, -1, 9, -1, 7, -1,
-      -1, -1, 9, 3, -1, 6, 7, 5, 3, -1, -1, 4, 8, 6, -1, 1, -1, 6, -1, -1, 3, 9,
-      -1, -1, -1, -1, -1, 6, 8, -1, 7, -1, -1, -1, -1, 7, -1, -1, -1, -1, -1,
-      -1, -1, -1, -1, 4, 9, -1, 6, -1, 8, -1, -1, 9, -1, -1, -1, -1, -1, 5,
-    ],
+    getEasilySolvableSudoku(),
   ]);
   const cells = cellsHistory[cellsHistory.length - 1];
 
@@ -55,11 +55,12 @@ export function App() {
   }
 
   useEffect(() => {
-    const bruteForceSolveResult = bruteForceSolve(cells);
-
-    const solvable = bruteForceSolveResult[3];
-    if (solvable) {
-      setHintNotSolvable(false);
+    if (hintNotSolvable) {
+      const bruteForceSolveResult = bruteForceSolve(cells);
+      const solvable = bruteForceSolveResult[3];
+      if (solvable) {
+        setHintNotSolvable(false);
+      }
     }
     const isWrongMove = checkWrongMove(cells);
     setWrongMove(isWrongMove);

@@ -36,11 +36,6 @@ const linesChunks = [
   [60, 61, 62, 69, 70, 71, 78, 79, 80],
 ];
 
-const orangeCells = [0, 1, 7, 8, 9, 10, 16, 17, 63, 64, 70, 71, 72, 73, 79, 80];
-const purpleCells = [
-  20, 21, 22, 23, 24, 29, 33, 38, 42, 47, 51, 56, 57, 58, 59, 60,
-];
-
 export const exclusions: Record<number, Array<number>> = {
   0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 27, 36, 45, 54, 63, 72],
   1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 28, 37, 46, 55, 64, 73],
@@ -544,118 +539,71 @@ export function bruteForceSolve(
   ];
 }
 
-export function createSudoku(): Array<number> {
-  const cells = new Array(81).fill(-1);
-  let errorCount = 0;
-  let setIndices: Array<number> = [];
+const easilySolvableSudokus = [
+  [
+    -1, -1, 2, -1, 6, 8, 5, -1, -1, 3, -1, -1, 2, -1, 5, -1, -1, 9, -1, 7, -1,
+    -1, -1, 9, 3, -1, 6, 7, 5, 3, -1, -1, 4, 8, 6, -1, 1, -1, 6, -1, -1, 3, 9,
+    -1, -1, -1, -1, -1, 6, 8, -1, 7, -1, -1, -1, -1, 7, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, 4, 9, -1, 6, -1, 8, -1, -1, 9, -1, -1, -1, -1, -1, 5,
+  ],
+  [
+    -1, -1, -1, -1, -1, 6, -1, 9, -1, 1, -1, 4, -1, 8, -1, 7, 3, -1, -1, -1, 7,
+    -1, 2, -1, -1, 4, -1, 3, -1, -1, -1, -1, 8, -1, 6, -1, 4, -1, -1, 1, 6, -1,
+    -1, 5, -1, 5, -1, -1, 7, -1, -1, -1, 2, 1, 9, -1, -1, 8, 3, 7, -1, -1, -1,
+    -1, -1, 1, 6, 9, -1, -1, -1, -1, -1, -1, 8, 2, -1, -1, 3, 7, -1,
+  ],
+  [
+    2, 9, 3, -1, -1, 7, -1, 4, -1, -1, -1, 4, -1, 8, 9, 3, -1, -1, -1, 8, 7, -1,
+    -1, -1, -1, -1, 9, -1, 5, 9, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1,
+    4, -1, -1, -1, 7, 1, 3, -1, -1, 8, -1, -1, -1, 3, -1, 7, -1, -1, 6, 1, -1,
+    1, -1, -1, 2, 9, -1, 7, -1, 5, -1, -1, 5, 8, -1, -1, -1, -1, -1,
+  ],
+  [
+    -1, -1, -1, -1, -1, 7, 6, -1, -1, -1, 7, -1, 2, -1, -1, 5, -1, -1, 5, -1,
+    -1, -1, -1, -1, 2, 3, -1, -1, 2, -1, -1, -1, 3, 9, -1, -1, -1, -1, -1, 9, 1,
+    -1, -1, -1, 8, -1, 9, 7, -1, -1, -1, -1, 1, -1, -1, 5, -1, 7, -1, 6, 1, 9,
+    -1, -1, -1, 4, 5, -1, 1, -1, -1, 2, 9, 1, -1, -1, 8, -1, 4, 7, 5,
+  ],
+  [
+    4, -1, 6, 1, 2, -1, -1, -1, 3, -1, 2, -1, 5, -1, -1, -1, -1, 1, -1, -1, 8,
+    -1, -1, -1, 7, 2, 9, -1, 1, 2, 8, 6, 4, 3, -1, -1, 7, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, 9, -1, -1, 1, -1, -1, -1, -1, -1, -1, 3, 1, -1, -1, -1,
+    2, -1, -1, -1, -1, -1, -1, 9, -1, 4, -1, 7, 3, -1, 9, 2, 1, 8, -1,
+  ],
+  [
+    9, -1, -1, -1, 5, 8, 7, -1, -1, 1, -1, -1, -1, 6, -1, -1, -1, 8, -1, -1, -1,
+    -1, -1, -1, -1, 3, 9, 4, -1, 2, 5, 8, 3, -1, 6, -1, 6, 8, -1, -1, 2, 7, -1,
+    -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, 7, -1, -1, 1, -1, -1,
+    -1, 1, -1, -1, -1, 2, 3, -1, 5, -1, 2, 5, -1, 9, -1, 6, 7, -1,
+  ],
+  [
+    -1, -1, 5, -1, -1, -1, -1, 1, 2, -1, -1, -1, 1, -1, 6, -1, -1, -1, -1, -1,
+    1, 7, 5, 4, 6, -1, 9, 4, -1, -1, 8, -1, -1, 5, 9, 7, -1, 5, -1, -1, -1, -1,
+    -1, -1, -1, 7, -1, -1, -1, -1, 3, -1, -1, -1, 3, 7, -1, -1, 1, 8, -1, 5, -1,
+    1, -1, -1, -1, 3, -1, -1, 7, 6, -1, 8, 9, -1, -1, -1, 3, 2, -1,
+  ],
+  [
+    7, 8, -1, -1, 4, -1, -1, -1, 9, 2, -1, 6, 1, -1, 7, 4, 3, -1, 1, -1, 4, 5,
+    -1, 8, 7, -1, -1, 3, -1, -1, 7, -1, 1, 9, 8, -1, 5, -1, -1, -1, -1, -1, -1,
+    -1, 2, -1, -1, -1, -1, 2, 4, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, 1,
+    -1, 3, 7, -1, -1, -1, -1, -1, -1, -1, 1, -1, 6, -1, 2, -1, -1, 7,
+  ],
+  [
+    2, -1, -1, 5, -1, 7, -1, -1, -1, 6, -1, 7, -1, -1, 9, -1, 8, 3, -1, 8, 9, 3,
+    -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1,
+    -1, 3, 5, -1, 4, -1, -1, -1, -1, 5, 6, -1, 1, -1, 5, 3, 2, 6, 4, -1, 9, -1,
+    -1, 9, -1, 8, 5, -1, 2, 3, -1, 1, -1, 6, -1, -1, -1, -1, -1, -1,
+  ],
+  [
+    -1, 7, -1, -1, -1, -1, 6, 9, 8, -1, -1, -1, -1, 7, -1, -1, -1, -1, -1, -1,
+    8, 3, 1, 9, -1, -1, 2, -1, -1, -1, -1, -1, 5, -1, 6, -1, -1, -1, 6, -1, -1,
+    -1, 1, 3, 9, -1, 4, 9, -1, -1, 6, -1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, 9, 5, -1, 4, -1, 7, 8, 2, -1, 8, -1, 7, 9, 2, 3, -1, 4, -1,
+  ],
+];
 
-  function nubmerIsPossible(index: number, number: number) {
-    const lineHorizontal = linesHorizontal.find((x) =>
-      x.includes(index),
-    ) as Array<number>;
-    const lineVertical = linesVertical.find((x) =>
-      x.includes(index),
-    ) as Array<number>;
-    const lineChunk = linesChunks.find((x) =>
-      x.includes(index),
-    ) as Array<number>;
-
-    for (const line of [lineHorizontal, lineVertical, lineChunk]) {
-      for (const lineIndex of line) {
-        if (cells[lineIndex] === number) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  const center40 = Math.floor(Math.random() * 9) + 1;
-  const noDups1to9 = [...Array(9).keys()]
-    .map((n) => n + 1)
-    .sort(() => Math.random() - 0.5);
-  const withDups = Array.from(
-    { length: 7 },
-    () => Math.floor(Math.random() * 9) + 1,
-  );
-
-  console.log(
-    "center40",
-    center40,
-    "noDups1to9",
-    noDups1to9,
-    "withDups",
-    withDups,
-  );
-
-  cells[40] = center40;
-
-  for (const number of noDups1to9) {
-    // if (errorCount > 0) {
-    //   // console.log("error Reset");
-
-    //   for (let j = 0; j < errorCount; j++) {
-    //     const randomIndex = Math.floor(Math.random() * setIndices.length);
-    //     const deleteIndex = setIndices[randomIndex];
-    //     let deletePairIndex = randomIndex - 1;
-    //     if (randomIndex % 2 === 0) {
-    //       deletePairIndex += 2;
-    //     }
-    //     deletePairIndex = setIndices[deletePairIndex];
-    //     console.log(
-    //       "error Reset",
-    //       String(cells[deleteIndex]),
-    //       String(cells[deletePairIndex]),
-    //     );
-
-    //     cells[deleteIndex] = -1;
-    //     cells[deletePairIndex] = -1;
-    //     setIndices = setIndices.filter(
-    //       (x) => x !== deleteIndex && x !== deletePairIndex,
-    //     );
-    //     console.log("setIndices", deleteIndex, deletePairIndex, setIndices);
-    //   }
-
-    //   errorCount--;
-    //   continue;
-    // }
-
-    const orangeIndex =
-      orangeCells[Math.floor(Math.random() * orangeCells.length)];
-    const purpleIndex =
-      purpleCells[Math.floor(Math.random() * purpleCells.length)];
-
-    if (cells[orangeIndex] !== -1 || cells[purpleIndex] !== -1) {
-      errorCount++;
-      // noDups1to9.push(number);
-      continue;
-    }
-
-    // if (
-    //   !nubmerIsPossible(orangeIndex, number) ||
-    //   !nubmerIsPossible(purpleIndex, number)
-    // ) {
-    //   errorCount++;
-    //   // noDups1to9.push(number);
-    //   continue;
-    // }
-
-    cells[orangeIndex] = number;
-    // if (!nubmerIsPossible(purpleIndex, number)) {
-    //   cells[orangeIndex] = -1;
-    //   errorCount++;
-    //   // noDups1to9.push(number);
-    //   continue;
-    // }
-    cells[purpleIndex] = number;
-    setIndices.push(orangeIndex, purpleIndex);
-    errorCount = Math.max(0, errorCount - 1);
-  }
-
-  // const [_, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
-
-  // console.log("hasMultipleResults", hasMultipleResults, "solvable", solvable);
-
-  console.log("createSudoku", printField(cells));
-  return cells;
+export function getEasilySolvableSudoku() {
+  return easilySolvableSudokus[
+    Math.floor(Math.random() * easilySolvableSudokus.length)
+  ];
 }
