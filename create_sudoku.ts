@@ -43,6 +43,86 @@ const purpleCells = [
   20, 21, 22, 23, 24, 29, 33, 38, 42, 47, 51, 56, 57, 58, 59, 60,
 ];
 
+/**
+ * Tries to solve the given Sudoku board using brute-force backtracking.
+ *
+ * - Explores all valid number placements recursively
+ * - Detects whether the puzzle is solvable
+ * - Detects if multiple solutions exist
+ * - Returns the first valid solution and the first decision move
+ *
+ * @param pCells Sudoku board as a flat array of length 81 (-1 = empty cell)
+ * @returns [
+ *   solvedCells,        // solved board or original input if unsolvable
+ *   solveFirstMove,     // first guessed move [index, number]
+ *   hasMultipleResults, // true if more than one solution exists
+ *   solvable            // true if at least one solution exists
+ * ]
+ */
+export function bruteForceSolve(
+  pCells: Array<number>,
+): [Array<number>, Array<number>, boolean, boolean] {
+  const cells = pCells.slice();
+  const solves: Array<Array<number>> = [];
+  let firstMove: Array<number> = [];
+  const moves: Array<Array<number>> = [];
+
+  function nubmerIsPossible(index: number, number: number) {
+    const lineHorizontal = linesHorizontal.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+    const lineVertical = linesVertical.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+    const lineChunk = linesChunks.find((x) =>
+      x.includes(index),
+    ) as Array<number>;
+
+    for (const line of [lineHorizontal, lineVertical, lineChunk]) {
+      for (const lineIndex of line) {
+        if (cells[lineIndex] === number) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function solve() {
+    if (solves.length > 1) {
+      return;
+    }
+    for (let index = 0; index < 81; index++) {
+      if (cells[index] !== -1) {
+        continue;
+      }
+      for (let number = 1; number < 10; number++) {
+        if (nubmerIsPossible(index, number)) {
+          cells[index] = number;
+          moves.push([index, number]);
+          solve();
+          cells[index] = -1;
+          moves.pop();
+        }
+      }
+
+      return;
+    }
+    if (firstMove.length <= 0) {
+      firstMove = moves[0];
+    }
+    solves.push(cells.slice());
+  }
+  solve();
+
+  return [
+    solves.length <= 0 ? pCells : solves[0],
+    firstMove,
+    solves.length > 1 ? true : false,
+    solves.length <= 0 ? false : true,
+  ];
+}
+
 function printField(cells: Array<number>) {
   let txt = "\n";
   for (let i = 1; i < 82; i++) {
@@ -57,7 +137,7 @@ function printField(cells: Array<number>) {
   return txt;
 }
 
-function createSudoku(): Array<number> {
+function createSudoku() {
   const cells = new Array(81).fill(-1);
   let errorCount = 0;
   let setIndices: Array<number> = [];
@@ -104,35 +184,6 @@ function createSudoku(): Array<number> {
   cells[40] = center40;
 
   for (const number of noDups1to9) {
-    // if (errorCount > 0) {
-    //   // console.log("error Reset");
-
-    //   for (let j = 0; j < errorCount; j++) {
-    //     const randomIndex = Math.floor(Math.random() * setIndices.length);
-    //     const deleteIndex = setIndices[randomIndex];
-    //     let deletePairIndex = randomIndex - 1;
-    //     if (randomIndex % 2 === 0) {
-    //       deletePairIndex += 2;
-    //     }
-    //     deletePairIndex = setIndices[deletePairIndex];
-    //     console.log(
-    //       "error Reset",
-    //       String(cells[deleteIndex]),
-    //       String(cells[deletePairIndex]),
-    //     );
-
-    //     cells[deleteIndex] = -1;
-    //     cells[deletePairIndex] = -1;
-    //     setIndices = setIndices.filter(
-    //       (x) => x !== deleteIndex && x !== deletePairIndex,
-    //     );
-    //     console.log("setIndices", deleteIndex, deletePairIndex, setIndices);
-    //   }
-
-    //   errorCount--;
-    //   continue;
-    // }
-
     const orangeIndex =
       orangeCells[Math.floor(Math.random() * orangeCells.length)];
     const purpleIndex =
@@ -140,45 +191,48 @@ function createSudoku(): Array<number> {
 
     if (cells[orangeIndex] !== -1 || cells[purpleIndex] !== -1) {
       errorCount++;
-      // noDups1to9.push(number);
+      noDups1to9.push(number);
       continue;
     }
 
-    // if (
-    //   !nubmerIsPossible(orangeIndex, number) ||
-    //   !nubmerIsPossible(purpleIndex, number)
-    // ) {
-    //   errorCount++;
-    //   // noDups1to9.push(number);
-    //   continue;
-    // }
+    if (
+      !nubmerIsPossible(orangeIndex, number) ||
+      !nubmerIsPossible(purpleIndex, number)
+    ) {
+      errorCount++;
+      noDups1to9.push(number);
+      continue;
+    }
 
     cells[orangeIndex] = number;
-    // if (!nubmerIsPossible(purpleIndex, number)) {
-    //   cells[orangeIndex] = -1;
-    //   errorCount++;
-    //   // noDups1to9.push(number);
-    //   continue;
-    // }
+    if (!nubmerIsPossible(purpleIndex, number)) {
+      cells[orangeIndex] = -1;
+      errorCount++;
+      noDups1to9.push(number);
+      continue;
+    }
     cells[purpleIndex] = number;
     setIndices.push(orangeIndex, purpleIndex);
     errorCount = Math.max(0, errorCount - 1);
   }
 
-  // const [_, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
+  const [cellsSolved, __, hasMultipleResults, solvable] =
+    bruteForceSolve(cells);
 
   // console.log("hasMultipleResults", hasMultipleResults, "solvable", solvable);
 
   // console.log("createSudoku", printField(cells));
-  return cells;
+  return [cells, cellsSolved, hasMultipleResults, solvable];
 }
 
-console.log("elapsedMs");
-for (let i = 0; i < 100000; i++) {
+console.log("elapsedMs;solvable;hasMultipleResults;cells;cellsSolved");
+for (let i = 0; i < 100; i++) {
   const start = process.hrtime.bigint();
-  createSudoku();
+  const [cells, cellsSolved, hasMultipleResults, solvable] = createSudoku();
   const end = process.hrtime.bigint();
   const elapsedMs = Number(end - start) / 1_000_000;
 
-  console.log(elapsedMs);
+  console.log(
+    `${elapsedMs};${solvable};${hasMultipleResults};[${cells}];[${cellsSolved}]`,
+  );
 }
