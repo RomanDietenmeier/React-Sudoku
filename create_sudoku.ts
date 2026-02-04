@@ -138,7 +138,7 @@ function printField(cells: Array<number>) {
 }
 
 function createSudoku() {
-  const cells = new Array(81).fill(-1);
+  let cells = new Array(81).fill(-1);
   let errorCount = 0;
   let setIndices: Array<number> = [];
 
@@ -216,12 +216,24 @@ function createSudoku() {
     errorCount = Math.max(0, errorCount - 1);
   }
 
-  const [cellsSolved, __, hasMultipleResults, solvable] =
-    bruteForceSolve(cells);
+  let [cellsSolved, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
 
   // console.log("hasMultipleResults", hasMultipleResults, "solvable", solvable);
-
   // console.log("createSudoku", printField(cells));
+
+  if (!solvable) {
+    return [cells, cellsSolved, hasMultipleResults, solvable];
+  }
+
+  cells = cellsSolved.slice();
+
+  const shuffled0to80_55Values = [...Array(81).keys()]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 55);
+  for (const index of shuffled0to80_55Values) {
+    cells[index] = -1;
+  }
+  [cellsSolved, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
   return [cells, cellsSolved, hasMultipleResults, solvable];
 }
 
