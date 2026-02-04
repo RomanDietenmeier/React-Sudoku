@@ -636,10 +636,10 @@ function createSudoku() {
 
   cells = cellsSolved.slice();
 
-  const shuffled0to80_55Values = [...Array(81).keys()]
+  const shuffled0to80_49Values = [...Array(81).keys()]
     .sort(() => Math.random() - 0.5)
-    .slice(0, 55);
-  for (const index of shuffled0to80_55Values) {
+    .slice(0, 49);
+  for (const index of shuffled0to80_49Values) {
     cells[index] = -1;
   }
   [cellsSolved, __, hasMultipleResults, solvable] = bruteForceSolve(cells);
