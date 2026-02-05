@@ -66,6 +66,7 @@ body {
 
 .grid_normal_button {
   aspect-ratio: 4 /1;
+  padding: 0;
   width: 100%;
   transition:
     background-color 0.3s ease,

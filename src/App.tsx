@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./app.css";
 import { checkWrongMove } from "./checkWrongMove";
 import {
@@ -663,7 +663,13 @@ export function App() {
           </tr>
         </tbody>
       </table>
-      <div>
+      <div
+        style={{
+          width: "calc(100vw - 1rem)",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
         <div
           style={{
             display: "grid",
