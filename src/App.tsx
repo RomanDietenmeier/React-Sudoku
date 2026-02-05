@@ -696,7 +696,7 @@ export function App() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-            columnGap: "10px",
+            columnGap: "5px",
             padding: "5px",
           }}
         >
